@@ -26,9 +26,15 @@ export async function POST(req) {
     );
 
   } catch (error) {
-    console.error('Database connection error:', error);
+    console.error('Detailed Database Error:', error);
+    
+    // Check if env var is loaded
+    if (!process.env.MONGODB_URI) {
+      console.error('FATAL: MONGODB_URI is not defined in process.env');
+    }
+
     return NextResponse.json(
-      { message: 'Something went wrong!' },
+      { message: `Error: ${error.message}` },
       { status: 500 }
     );
   }
