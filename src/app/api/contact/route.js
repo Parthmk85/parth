@@ -4,8 +4,11 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {
+    console.log("Contact API endpoint hit"); // Debug log
     await connectToDatabase();
+    console.log("Database connection attempted"); // Debug log
     const body = await req.json();
+    console.log("Request body received:", body); // Debug log
     
     // Basic validation
     if (!body.fullname || !body.email || !body.message) {

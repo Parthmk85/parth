@@ -39,12 +39,14 @@ export default function Contact() {
         setFormData({ fullname: '', email: '', phone: '', message: '' });
       } else {
         setStatus('error');
-        setStatusMsg(data.message || 'Something went wrong.');
+        // Try to explain why it failed
+        setStatusMsg(data.message || `Server error: ${res.status}`);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Submission Error:", error);
       setStatus('error');
-      setStatusMsg('Failed to send message.');
+      // Show the actual error message if possible to help debugging
+      setStatusMsg(error.message || 'Failed to send message.');
     }
   };
 
