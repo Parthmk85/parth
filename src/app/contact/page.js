@@ -31,7 +31,16 @@ export default function Contact() {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      let data;
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        data = await res.json();
+      } else {
+        // If not JSON, it's likely an HTML error page (404 or 500)
+        const text = await res.text();
+        console.error("Non-JSON response:", text);
+        throw new Error(`Server responded with ${res.status}: ${res.statusText}`);
+      }
 
       if (res.ok) {
         setStatus('success');
@@ -46,7 +55,7 @@ export default function Contact() {
       console.error("Submission Error:", error);
       setStatus('error');
       // Show the actual error message if possible to help debugging
-      setStatusMsg(error.message || 'Failed to send message.');
+      setStatusMsg(error.message || 'Failed to send message (Network/Unknown error).');
     }
   };
 
